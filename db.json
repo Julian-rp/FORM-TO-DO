@@ -1,0 +1,60 @@
+{
+  "tasks": [
+    {
+      "id": "2836",
+      "author": "Michael",
+      "text": "Jugar futbol",
+      "completed": true,
+      "editor": null
+    },
+    {
+      "id": "5a2f",
+      "author": "Michael",
+      "text": "Hacer la comida",
+      "completed": false,
+      "editor": null
+    },
+    {
+      "id": "209c",
+      "author": "Michael",
+      "text": "Hacer oficio",
+      "completed": false,
+      "editor": null
+    },
+    {
+      "id": "3302",
+      "author": "Michael",
+      "text": "Sacar al perro",
+      "completed": false,
+      "editor": null
+    },
+    {
+      "id": "1cd8",
+      "author": "julian",
+      "text": "Organizar la cama",
+      "completed": false,
+      "editor": "julian"
+    },
+    {
+      "id": "28f9",
+      "author": "julian",
+      "text": "Ver partido de futbol",
+      "completed": false,
+      "editor": null
+    },
+    {
+      "id": "0607",
+      "author": "julian",
+      "text": "Sacar la basura",
+      "completed": false,
+      "editor": null
+    },
+    {
+      "id": "b3b3",
+      "author": "Michael",
+      "text": "comprar computador",
+      "completed": false,
+      "editor": null
+    }
+  ]
+}
