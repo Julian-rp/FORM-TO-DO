@@ -11,16 +11,16 @@ export default function TodoForm({ onAdd, disabled }) {
   };
 
   return (
-  <form onSubmit={submit} className="flex gap-2 bg-[#23272f] p-4 rounded-lg border border-[#2c5282]">
+  <form onSubmit={submit} className="flex gap-2 bg-[#14532d] p-4 rounded-lg border border-[#16a34a]">
       <input
-        className="flex-1 border border-[#2c5282] px-3 py-2 rounded bg-[#23272f] text-[#e2e8f0]"
+        className="flex-1 border border-[#16a34a] px-3 py-2 rounded bg-[#14532d] text-[#dcfce7]"
   placeholder="New task..."
         value={text}
         onChange={(e) => setText(e.target.value)}
         disabled={disabled}
       />
       <button
-        className="px-4 py-2 bg-[#2c5282] text-white rounded font-bold shadow-md hover:bg-[#1a202c]"
+        className="px-4 py-2 bg-[#16a34a] text-white rounded font-bold shadow-md hover:bg-[#15803d]"
         type="submit"
         disabled={disabled}
       >

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { getTasks, createTask, updateTask, deleteTask } from "../api";
 import TodoForm from "../components/TodoForm";
 import TodoList from "../components/TodoList";
@@ -8,6 +9,7 @@ import { toast } from "react-toastify";
 
 export default function Home() {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
@@ -63,7 +65,10 @@ export default function Home() {
   const handleEdit = async (id, newText) => {
     try {
       const current = tasks.find((t) => t.id === id);
-      if (!current) return;
+      if (!current) {
+        toast.error("Tarea no encontrada");
+        return;
+      }
 
       const updatedTask = {
         ...current,
@@ -74,9 +79,10 @@ export default function Home() {
       const updated = await updateTask(id, updatedTask);
 
       setTasks((prev) => prev.map((t) => (t.id === id ? updated : t)));
-      toast.success("Tarea editada");
-    } catch {
-      toast.error("Error editando tarea");
+      toast.success("Tarea editada correctamente");
+    } catch (error) {
+      console.error("Error editando tarea:", error);
+      toast.error("Error editando tarea. Intenta de nuevo.");
     }
   };
 
@@ -95,13 +101,13 @@ export default function Home() {
   return (
     <div className="min-h-screen p-6 max-w-4xl mx-auto">
       <header className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">Team To-Do</h1>
+        <h1 className="text-2xl font-bold text-[#16a34a]">Team To-Do</h1>
         {user && (
           <div className="flex gap-3 items-center">
             <span>👤 {user.name}</span>
             <button
-              onClick={logout}
-              className="px-3 py-1 border rounded text-sm"
+              onClick={() => logout(navigate)}
+              className="px-3 py-1 border border-[#16a34a] rounded text-sm bg-[#16a34a] text-white hover:bg-[#15803d]"
             >
               Logout
             </button>
@@ -109,7 +115,7 @@ export default function Home() {
         )}
       </header>
 
-      <main className="bg-white p-6 rounded shadow">
+      <main className="bg-[#f0fdf4] p-6 rounded shadow">
         <SearchBar
           query={query}
           setQuery={setQuery}
@@ -122,9 +128,9 @@ export default function Home() {
         </div>
 
         {loading ? (
-          <div className="text-center p-6">Cargando tareas...</div>
+          <div className="text-center p-6 text-[#16a34a]">Cargando tareas...</div>
         ) : filtered.length === 0 ? (
-          <div className="text-center p-6 text-gray-500">
+          <div className="text-center p-6 text-[#22c55e]">
             No se encontraron tareas.
           </div>
         ) : (

@@ -1,51 +1,64 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { getUsers, createUser, findUserByName } from "../api";
 
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const raw = localStorage.getItem("auth_user");
     if (raw) setUser(JSON.parse(raw));
   }, []);
 
-  const login = (name, password) => {
-    // buscamos si ya existe en localStorage "users_db"
-    const dbRaw = localStorage.getItem("users_db");
-    let db = dbRaw ? JSON.parse(dbRaw) : [];
-
-    const existing = db.find((u) => u.name === name);
-
-    if (existing) {
-      if (existing.password !== password) {
-        toast.error("Incorrect password");
-        return;
+  const login = async (name, password, navigate) => {
+    try {
+      // Limpiar espacios en blanco
+      const cleanName = name.trim();
+      const cleanPassword = password.trim();
+      
+      // Buscar usuario existente
+      const existing = await findUserByName(cleanName);
+      
+      console.log("Usuario buscado:", cleanName);
+      console.log("Usuario encontrado:", existing);
+      
+      if (existing) {
+        console.log("Contraseña ingresada:", cleanPassword);
+        console.log("Contraseña guardada:", existing.password);
+        console.log("¿Coinciden?:", existing.password === cleanPassword);
+        console.log("Longitud contraseña ingresada:", cleanPassword.length);
+        console.log("Longitud contraseña guardada:", existing.password?.length);
+        
+        if (existing.password !== cleanPassword) {
+          toast.error("Contraseña incorrecta. Verifica que estés usando la contraseña correcta.");
+          return;
+        }
+        setUser(existing);
+        localStorage.setItem("auth_user", JSON.stringify(existing));
+        toast.success(`Bienvenido ${cleanName}`);
+        if (navigate) navigate("/");
+      } else {
+        // Nuevo registro - guardar en db.json
+        const newUser = { name: cleanName, password: cleanPassword };
+        const created = await createUser(newUser);
+        setUser(created);
+        localStorage.setItem("auth_user", JSON.stringify(created));
+        toast.success(`Usuario creado: ${cleanName}`);
+        if (navigate) navigate("/");
       }
-      setUser(existing);
-      localStorage.setItem("auth_user", JSON.stringify(existing));
-      toast.success(`Welcome ${name}`);
-      navigate("/");
-    } else {
-      // new registration
-      const newUser = { name, password };
-      db.push(newUser);
-      localStorage.setItem("users_db", JSON.stringify(db));
-      setUser(newUser);
-      localStorage.setItem("auth_user", JSON.stringify(newUser));
-      toast.success(`User created: ${name}`);
-      navigate("/");
+    } catch (error) {
+      console.error("Error en login:", error);
+      toast.error("Error al procesar el login. Intenta de nuevo.");
     }
   };
 
-  const logout = () => {
+  const logout = (navigate) => {
     setUser(null);
     localStorage.removeItem("auth_user");
     toast.info("Session closed");
-    navigate("/login");
+    if (navigate) navigate("/login");
   };
 
   return (

@@ -4,23 +4,26 @@ export default function SearchBar({ query, setQuery, filter, setFilter }) {
   const debounced = useDebounce(query, 400);
 
   return (
-  <div className="flex flex-col md:flex-row md:items-center gap-3 bg-[#23272f] p-4 rounded-lg border border-[#2c5282]">
+  <div className="flex flex-col md:flex-row md:items-center gap-3 bg-[#14532d] p-4 rounded-lg border border-[#16a34a]">
       <input
-        className="flex-1 border border-[#2c5282] px-3 py-2 rounded bg-[#23272f] text-[#e2e8f0]"
+        className="flex-1 border border-[#16a34a] px-3 py-2 rounded bg-[#14532d] text-[#dcfce7]"
   placeholder="Search..."
         value={query}
         onChange={(e) => setQuery(e.target.value)}
       />
       <div className="flex gap-2">
-        {["Todo", "Pendiente", "Completado"].map((f) => {
-          const labels = { Todo: "Todo", Pendiente: "Pendiente", Completado: "Completado" };
+        {[
+          { value: "all", label: "Todo" },
+          { value: "pending", label: "Pendiente" },
+          { value: "completed", label: "Completado" }
+        ].map((f) => {
           return (
             <button
-              key={f}
-              className={`px-3 py-2 rounded border border-[#2c5282] font-bold shadow-md ${filter === f ? "bg-[#2c5282] text-white" : "bg-[#23272f] text-[#e2e8f0]"}`}
-              onClick={() => setFilter(f)}
+              key={f.value}
+              className={`px-3 py-2 rounded border border-[#16a34a] font-bold shadow-md ${filter === f.value ? "bg-[#16a34a] text-white" : "bg-[#14532d] text-[#dcfce7]"}`}
+              onClick={() => setFilter(f.value)}
             >
-              {labels[f]}
+              {f.label}
             </button>
           );
         })}
